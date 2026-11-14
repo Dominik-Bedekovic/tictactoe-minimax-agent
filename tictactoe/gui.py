@@ -4,6 +4,8 @@ from .board import TicTacToeBoard
 from .agent import TicTacToeMinimaxAgent
 
 
+LEVELS = {'Easy': 0.5, 'Medium': 0.3, 'Hard': 0}
+
 class TicTacToeApp:
     def __init__(self, root):
         self.root = root
@@ -37,6 +39,8 @@ class TicTacToeApp:
         tk.Button(root, text='New game', font=('Arial', 12),
                   command=self.new_game).pack(pady=(0, 22), ipadx=20, ipady=5)
         root.protocol('WM_DELETE_WINDOW', self.close)
+        self.difficulty = tk.StringVar(value='Hard')
+        tk.OptionMenu(root, self.difficulty, 'Easy', 'Medium', 'Hard').pack(pady=(0, 10))
         self.new_game()
 
     def new_game(self):
@@ -44,7 +48,8 @@ class TicTacToeApp:
             self.root.after_cancel(self.pending_move)
             self.pending_move = None
         self.board = TicTacToeBoard()
-        self.agent = TicTacToeMinimaxAgent(self.board)
+        chance = LEVELS[self.difficulty.get()]
+        self.agent = TicTacToeMinimaxAgent(self.board, chance)
         self.thinking = False
         self.stats.set('')
         self.refresh()
@@ -56,12 +61,16 @@ class TicTacToeApp:
                 disabled = self.board.game_over or self.thinking or symbol != ' '
                 self.buttons[row][col].configure(
                     text=symbol, state=tk.DISABLED if disabled else tk.NORMAL,
+                    bg='#e6edf7',
                     disabledforeground='#2458a6' if symbol == 'X' else '#ad462b')
         winner = self.board.check_winner()
         if winner == 'Draw':
             self.status.set("It's a draw!")
         elif winner:
             self.status.set('You win!' if winner == 'X' else 'Minimax wins!')
+            line = self.board.get_winning_line()
+            for x,y in line:
+                self.buttons[x][y].configure(bg='green')
         else:
             self.status.set('Minimax is thinking…' if self.thinking else 'Your turn — choose a square')
 

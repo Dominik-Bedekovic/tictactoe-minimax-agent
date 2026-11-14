@@ -111,5 +111,31 @@ class TicTacToeBoard:
         # no winner
         return 'Draw'
 
+    def get_winning_line(self):
+    
+        winner = self.check_winner()
+
+        winner_list = list()
+        if winner == 'X' or winner == 'O':
+            for i in range(3):
+                if self.board[i][0] == winner:
+                    if self.board[i][1] == winner and self.board[i][2] == winner:
+                        winner_list = [(i, 0), (i, 1), (i, 2)]
+                        break
+                if self.board[0][i] == winner:
+                    if self.board[1][i] == winner and self.board[2][i] == winner:
+                        winner_list = [(0, i), (1, i), (2, i)]
+                        break
+
+        if (self.board[0][0] == winner and self.board[1][1] == winner and self.board[2][2] == winner):
+            winner_list = [(0, 0), (1, 1), (2, 2)]
+
+        if (self.board[0][2] == winner and self.board[1][1] == winner and self.board[2][0] == winner):
+            winner_list = [(0, 2), (1, 1), (2, 0)]
+                            
+
+        return tuple(winner_list)
+
+
     def __getitem__(self, index):
         return self.board[index]

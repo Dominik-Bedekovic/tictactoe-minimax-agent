@@ -1,10 +1,11 @@
 from .board import TicTacToeBoard
-
+import random
 
 class TicTacToeMinimaxAgent():
-    def __init__(self, board: TicTacToeBoard):
+    def __init__(self, board: TicTacToeBoard, random_chance=0):
         self.board = board
-        self.nodes_expanded = 0
+        self.nodes_expanded = 0 
+        self.random_chance = random_chance
 
     def minimax(self, is_maximising:bool):
         self.nodes_expanded += 1
@@ -50,6 +51,12 @@ class TicTacToeMinimaxAgent():
             raise ValueError("This agent plays O; call it on O's turn.")
 
         moves = self.board.get_possible_moves()
+
+        if (random.random() <= self.random_chance):
+
+            random_move = random.choice(moves)
+
+            return random_move
 
         bestScore = float('inf')
         bestMove = None
