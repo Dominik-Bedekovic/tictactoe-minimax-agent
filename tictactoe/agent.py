@@ -7,7 +7,7 @@ class TicTacToeMinimaxAgent():
         self.nodes_expanded = 0 
         self.random_chance = random_chance
 
-    def minimax(self, is_maximising:bool):
+    def minimax(self, is_maximising:bool, alpha=-float('inf'), beta=float('inf')):
         self.nodes_expanded += 1
         winner = self.board.check_winner()
 
@@ -32,14 +32,19 @@ class TicTacToeMinimaxAgent():
 
             if is_maximising:
                 self.board[i][j] = 'X'
-                score = self.minimax(False)
+                score= self.minimax(False, alpha, beta)
                 bestScore = max(score, bestScore)
+                alpha = max(alpha, bestScore)
             else:
                 self.board[i][j] = 'O'
-                score = self.minimax(True)
+                score = self.minimax(True, alpha, beta)
                 bestScore = min(score, bestScore)
+                beta = min(beta, bestScore)
 
             self.board[i][j] = ' '
+
+            if beta <= alpha:
+                break
 
         return bestScore
 
@@ -64,7 +69,7 @@ class TicTacToeMinimaxAgent():
         for move in moves:
             i, j = move
             self.board[i][j] = 'O'
-            score = self.minimax(True)
+            score= self.minimax(True)
 
             if score < bestScore:
                 bestScore = score
