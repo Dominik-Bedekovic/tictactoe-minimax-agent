@@ -1,5 +1,7 @@
 # Tic-Tac-Toe Minimax Agent
 
+[![Tests](https://github.com/Dominik-Bedekovic/tictactoe-minimax-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/Dominik-Bedekovic/tictactoe-minimax-agent/actions/workflows/tests.yml)
+
 A Python tic-tac-toe game with a minimax AI opponent and a clickable Tkinter interface.
 
 You play **X**, and the AI plays **O**. The agent explores every possible continuation and chooses the best move, assuming both players play optimally. Try to force a draw—you can’t beat it!
