@@ -1,14 +1,22 @@
 from .board import TicTacToeBoard
+import time
 import random
 
 class TicTacToeMinimaxAgent():
-    def __init__(self, board: TicTacToeBoard, random_chance=0):
+    def __init__(self, board: TicTacToeBoard, random_chance=0, is_benchmark=False, is_prune=True):
         self.board = board
         self.nodes_expanded = 0 
         self.random_chance = random_chance
+        self.is_prune = is_prune
+        self.is_benchmark = is_benchmark
+        if self.is_benchmark:
+            self.num_of_searches = 0
+            self.elapsed_time = 0
 
     def minimax(self, is_maximising:bool, alpha=-float('inf'), beta=float('inf')):
         self.nodes_expanded += 1
+        if self.is_benchmark:
+            self.num_of_searches += 1
         winner = self.board.check_winner()
 
         if winner:
@@ -32,19 +40,28 @@ class TicTacToeMinimaxAgent():
 
             if is_maximising:
                 self.board[i][j] = 'X'
-                score= self.minimax(False, alpha, beta)
+                if self.is_prune:
+                    score= self.minimax(False, alpha, beta)
+                else:
+                    score = self.minimax(False)
                 bestScore = max(score, bestScore)
-                alpha = max(alpha, bestScore)
+                if self.is_prune:
+                    alpha = max(alpha, bestScore)
             else:
                 self.board[i][j] = 'O'
-                score = self.minimax(True, alpha, beta)
+                if self.is_prune == True:
+                    score = self.minimax(True, alpha, beta)
+                else:
+                    score = self.minimax(True)
                 bestScore = min(score, bestScore)
-                beta = min(beta, bestScore)
+                if self.is_prune:
+                    beta = min(beta, bestScore)
 
             self.board[i][j] = ' '
 
-            if beta <= alpha:
-                break
+            if self.is_prune == True:
+                if beta <= alpha:
+                    break
 
         return bestScore
 
@@ -54,6 +71,9 @@ class TicTacToeMinimaxAgent():
             return None
         if self.board.current_player != 'O':
             raise ValueError("This agent plays O; call it on O's turn.")
+
+        if self.is_benchmark:
+            start = time.process_time()
 
         moves = self.board.get_possible_moves()
 
@@ -76,5 +96,9 @@ class TicTacToeMinimaxAgent():
                 bestMove = move
 
             self.board[i][j] = ' '
+
+        if self.is_benchmark:
+            end = time.process_time()
+            self.elapsed_time = (end - start) * 1000
 
         return bestMove

@@ -7,6 +7,8 @@ You play **X**, and the AI plays **O**. The agent explores every possible contin
 ## Features
 
 - Full minimax search
+- Alpha-beta pruning
+- Difficulty levels (Easy / Medium / Hard)
 - Graphical board with a New Game button
 - Search-node counter
 - Optional terminal mode
@@ -28,7 +30,43 @@ For terminal mode:
 python main.py --console
 ```
 
+For testing you should install pytest through pip to run `test_agent.py` preferably with a virtual environment, then run:
+
+```bash
+python -m pytest
+```
+
+You can also run benchmarking through `benchmark.py`, to do so run:
+
+```bash
+python benchmark.py
+```
+
 On Windows, you can use `py` instead of `python`; on macOS/Linux, use `python3` if needed.
+
+## Benchmark table
+
+| Opening | Pruning | Nodes  | Time (ms) |
+| ------- | ------- | ------ | --------- |
+| corner  | off     | 59,704 |   83.5    |
+| corner  | on      |  4,089 |    6.7    |
+
+>pruning searched 93.2% fewer nodes
+
+
+| Opening | Pruning | Nodes  | Time (ms) |
+| ------- | ------- | ------ | --------- |
+| edge    | off     | 63,904 |   89.6    |
+| edge    | on      |  7,641 |   14.7    |
+
+>pruning searched 88.0% fewer nodes
+
+| Opening | Pruning | Nodes  | Time (ms) |
+| ------- | ------- | ------ | --------- |
+| centre  | off     | 55,504 |   108.8   |
+| centre  | on      |  6,138 |    10.2   |
+
+>pruning searched 88.9% fewer nodes
 
 ## Project structure
 
@@ -37,3 +75,4 @@ On Windows, you can use `py` instead of `python`; on macOS/Linux, use `python3` 
 - `tictactoe/board.py` — board state and game rules
 - `tictactoe/gui.py` — graphical interface
 - `tictactoe/console.py` — terminal interface
+- `benchmark.py` — benchmarking tool
