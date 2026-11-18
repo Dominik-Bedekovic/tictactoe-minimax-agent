@@ -6,6 +6,8 @@ A Python tic-tac-toe game with a minimax AI opponent and a clickable Tkinter int
 
 You play **X**, and the AI plays **O**. The agent explores every possible continuation and chooses the best move, assuming both players play optimally. Try to force a draw—you can’t beat it!
 
+![Demo game](docs/tictactoe_game.gif)
+
 ## Features
 
 - Full minimax search
