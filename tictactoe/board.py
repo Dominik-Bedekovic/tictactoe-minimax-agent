@@ -1,5 +1,12 @@
+from typing import Tuple, List, Optional
+
 class TicTacToeBoard:
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Initialize the board which is a 2D board with 9 cells 3x3.
+
+        Initiate the player and add a variable for deciding the state of the game.
+        """
         self.board = [
             [' ', ' ', ' ',],
             [' ', ' ', ' ',],
@@ -9,7 +16,7 @@ class TicTacToeBoard:
         self.current_player = 'X'
         self.game_over = False
 
-    def get_possible_moves(self):
+    def get_possible_moves(self) -> List[Tuple[int, int]]:
         """
         Returns a list of (i,j) pairs. 
         
@@ -27,7 +34,7 @@ class TicTacToeBoard:
                     moves.append( (i,j) )
         return moves
     
-    def make_move(self, row:int, col:int):
+    def make_move(self, row:int, col:int) -> Optional[str]:
         """This will update the board.
         At position (row,col) the symbol corresponding to the current player (self.current_player)
         will be drawn.
@@ -42,7 +49,7 @@ class TicTacToeBoard:
         if not (0 <= row < 3 and 0 <= col < 3):
             raise ValueError('Row and column must be between 0 and 2.')
         if self.game_over or self.board[row][col] != ' ':
-            return  # Ignore click if game is over or cell is occupied
+            return None # Ignore click if game is over or cell is occupied
 
         # Update the board and button
         self.board[row][col] = self.current_player
@@ -56,25 +63,28 @@ class TicTacToeBoard:
             self.__switch_player()
         return winner
 
-    def get_game_progress(self):
+    def get_game_progress(self) -> str:
+        """
+        Return a status message: whose turn it is, or who won.
+        """
         if self.game_over is True:
             # if the game is over, check the winner
             winner = self.check_winner()
             retval = f'The game is finished. '
-            retval += f"{winner} won! 🎉" if winner != 'Draw' else "It's a Draw! 😐"
+            retval += f"{winner} won!" if winner != 'Draw' else "It's a Draw!"
             return retval
         # the game is ongoing
         return f"It is currently {self.current_player}'s turn. "
 
-    def __str__(self):
-        retval = [ '|'.join(row) for row in self.board ]
-        retval = '\n-----\n'.join(retval)
+    def __str__(self) -> str:
+        row = [ '|'.join(row) for row in self.board ]
+        retval = '\n-----\n'.join(row)
         return retval
 
-    def __switch_player(self):
+    def __switch_player(self) -> None:
         self.current_player = 'O' if self.current_player == 'X' else 'X'
 
-    def check_winner(self):
+    def check_winner(self) -> Optional[str]:
         """
         Utility function which, for the current board, determines the game's result,
         and returns the winner (if there is one).
@@ -111,8 +121,14 @@ class TicTacToeBoard:
         # no winner
         return 'Draw'
 
-    def get_winning_line(self):
-    
+    def get_winning_line(self) -> Tuple[Tuple[int, int], ...]:
+        """
+        Return the three winning cells as (row, col) pairs,
+        or an empty tuple if nobody has won.
+
+        Checked in order: rows, columns, top-left to bottom-right diagonal,
+        top-right to bottom-left diagonal.
+        """    
         winner = self.check_winner()
 
         winner_list = list()
@@ -135,7 +151,6 @@ class TicTacToeBoard:
                             
 
         return tuple(winner_list)
-
 
     def __getitem__(self, index):
         return self.board[index]
